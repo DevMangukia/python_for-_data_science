@@ -1,0 +1,74 @@
+
+Practical 7: MySQL_CRUD_Operations
+Objective: Connect Python with MySQL and perform Create, Read, Update and Delete operations.
+
+Subject: Python for Data Science (BE05000231)
+
+Note: Run the cells from top to bottom. This notebook is written in a simple practical/lab style.
+
+Install and import MySQL connector
+Run this once if the connector is not installed.
+
+
+!pip install mysql-connector-python
+     
+
+import mysql.connector
+
+# Change these values according to your MySQL setup.
+conn = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="YOUR_PASSWORD"
+)
+cursor = conn.cursor()
+print("MySQL connected successfully.")
+     
+Create database and table
+
+cursor.execute("CREATE DATABASE IF NOT EXISTS pds_practical")
+cursor.execute("USE pds_practical")
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS students (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50),
+    marks INT
+)
+""")
+conn.commit()
+print("Database and table ready.")
+     
+Create / Insert
+
+sql = "INSERT INTO students (name, marks) VALUES (%s, %s)"
+values = ("Dharmik", 85)
+cursor.execute(sql, values)
+conn.commit()
+print("Record inserted.")
+     
+Read
+
+cursor.execute("SELECT * FROM students")
+for row in cursor.fetchall():
+    print(row)
+     
+Update
+
+sql = "UPDATE students SET marks=%s WHERE name=%s"
+cursor.execute(sql, (90, "Dharmik"))
+conn.commit()
+print("Record updated.")
+     
+Delete
+
+sql = "DELETE FROM students WHERE name=%s"
+cursor.execute(sql, ("Dharmik",))
+conn.commit()
+print("Record deleted.")
+     
+
+cursor.close()
+conn.close()
+print("MySQL connection closed.")
+     
